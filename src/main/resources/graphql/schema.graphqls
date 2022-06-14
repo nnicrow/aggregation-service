@@ -1,0 +1,171 @@
+type Query{
+    version: String!
+    brandList: [Brand]
+    brandById (id: ID): Brand
+    categoryList: [Category]
+    categoryById (id: ID): Category
+    productList: [Product]
+    productById (id: ID): Product
+    webShopList: [WebShop]
+    webShopById (id: ID): WebShop
+    webShopByName (name: String): WebShop
+    externalCategoryList: [ExternalCategory]
+    externalCategoryById (id: ID): ExternalCategory
+    externalBrandList: [ExternalBrand]
+    externalBrandById (id: ID): ExternalBrand
+    externalProductList: [ExternalProduct]
+    externalProductById (id: ID): ExternalProduct
+    sliderList: [Slider]
+}
+
+type Slider {
+    id: ID!
+    name: String!
+    description: String
+    path: String!
+}
+
+type Brand{
+    id: ID!
+    name: String!
+    brandNameTranslit: String
+    brandUrl: String
+    brandLogoUrl: String
+    brandVisible: Boolean
+    productList: [Product]
+}
+
+type Category{
+    id: ID!
+    name: String!
+    description: String
+    availability: Boolean
+    productList: [Product]
+}
+
+type Product{
+    id: ID!
+    name: String!
+    nameTranslit: String
+    modelName: String
+    description: String
+    availability: Boolean
+    brand: Brand!
+    category: Category!
+    externalProductList: [ExternalProduct]
+    imagesList: [Image]
+}
+
+type Image {
+    id: ID
+    url: String
+}
+
+type WebShop{
+    id: ID!
+    name: String!
+    description: String
+    availability: Boolean
+    link: String
+    categoryList: [ExternalCategory]
+    brandList: [ExternalBrand]
+#    productList: [ExternalProduct]
+}
+
+type ExternalCategory{
+    id: ID!
+    name: String!
+    description: String
+    externalId: String
+    availability: Boolean
+    webShop: WebShop!
+    category: Category!
+    productList: [ExternalProduct]
+}
+
+type ExternalBrand{
+    id: ID!
+    name: String!
+    brandNameTranslit: String
+    brandUrl: String
+    brandLogoUrl: String
+    externalId: String
+    webShop: WebShop!
+    brand: Brand!
+    productList: [ExternalProduct]
+}
+
+type ExternalProduct{
+    id: ID!
+    name: String!
+    nameTranslit: String
+    modelName: String
+    description: String
+    availability: Boolean
+    url: String
+    price: String
+    externalId: String
+    brand: ExternalBrand!
+    category: ExternalCategory!
+    product: Product!
+}
+
+type Mutation {
+    addProducts(input: ParseProductListInput): AddMutationResult
+}
+
+input ParseProductListInput {
+    products: [ProductFromParserInput!]!
+    webShop: Int!
+}
+
+type AddMutationResult {
+    id: ID
+    status: Boolean!
+    error: String
+}
+
+input ProductFromParserInput {
+    id: String
+    name: String
+    brand: BrandFromParserInput
+    nameTranslit: String
+    images: [ImagesFromParserInput]
+    category: CategoryFromParserInput
+    description: String
+    modelName: String
+#    properties: Set<PropertiesGroup>? = null,
+#    certificates: Set<String>? = null,
+#    instructions: Set<String>? = null,
+    url: String
+    innerId: Int
+    occupancy: Int
+}
+
+input ImagesFromParserInput {
+    url: String
+}
+
+input CategoryFromParserInput {
+    id: String
+    name: String
+    innerId: Int
+}
+
+input BrandFromParserInput {
+    id: String
+    brandName: String
+    brandNameTranslit: String
+    brandUrl: String
+    brandLogoUrl: String
+    isBrandVisible: Boolean
+    innerId: Int
+}
+
+
+#input WebShopInput {
+#    name: String!
+#    description: String
+#    availability: Boolean
+#    link: String
+#}
